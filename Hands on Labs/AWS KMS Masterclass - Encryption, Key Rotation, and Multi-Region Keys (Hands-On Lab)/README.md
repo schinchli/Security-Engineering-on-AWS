@@ -18,17 +18,18 @@ Data encryption is the foundation of cloud security. AWS Key Management Service 
 ## Table of Contents
 
 - [What Are We Building Today?](#what-are-we-building-today)
+- [Security Overview](#security-overview)
 - [Why Is This Important?](#why-is-this-important)
 - [AWS KMS Fundamentals](#aws-kms-fundamentals)
 - [Symmetric vs Asymmetric Encryption](#symmetric-vs-asymmetric-encryption)
 - [AWS Services Used](#aws-services-used)
 - [Architecture Overview](#architecture-overview)
 - [Prerequisites](#prerequisites)
-- [Hands-On Labs](#hands-on-labs)
-  - [Lab 1: Symmetric Key Encryption](#lab-1-symmetric-key-encryption-10-mins)
-  - [Lab 2: Asymmetric Key Encryption](#lab-2-asymmetric-key-encryption-10-mins)
-  - [Lab 3: Key Rotation](#lab-3-key-rotation-10-mins)
-  - [Lab 4: Multi-Region Keys](#lab-4-multi-region-keys-15-mins)
+- [Hands-On Tasks](#hands-on-tasks)
+  - [Task 1: Implement Symmetric Encryption with AES-256](#task-1-implement-symmetric-encryption-with-aes-256-10-mins)
+  - [Task 2: Configure Asymmetric Encryption with RSA-2048](#task-2-configure-asymmetric-encryption-with-rsa-2048-10-mins)
+  - [Task 3: Enable Automatic Key Rotation for Compliance](#task-3-enable-automatic-key-rotation-for-compliance-10-mins)
+  - [Task 4: Deploy Multi-Region Keys for Disaster Recovery](#task-4-deploy-multi-region-keys-for-disaster-recovery-15-mins)
 - [Important KMS Actions Reference](#important-kms-actions-reference)
 - [Envelope Encryption](#envelope-encryption)
 - [KMS Key Policies](#kms-key-policies)
@@ -46,12 +47,12 @@ Data encryption is the foundation of cloud security. AWS Key Management Service 
 
 In this masterclass, we build **four hands-on encryption scenarios** using AWS KMS:
 
-| Lab | What You'll Build | Key Concepts |
-|-----|-------------------|--------------|
-| **Lab 1** | Symmetric encryption system | AES-256-GCM, single-key encryption |
-| **Lab 2** | Asymmetric encryption with PKI | RSA-2048, public/private key pairs |
-| **Lab 3** | Automatic key rotation | Compliance, backward compatibility |
-| **Lab 4** | Multi-region disaster recovery | Cross-region encryption, replicas |
+| Task | What You'll Build | Key Concepts | Security Benefit |
+|------|-------------------|--------------|------------------|
+| **Task 1** | Symmetric encryption system | AES-256-GCM, single-key encryption | Protect data at rest with FIPS 140-2 validated encryption |
+| **Task 2** | Asymmetric encryption with PKI | RSA-2048, public/private key pairs | Enable secure client-side encryption without exposing credentials |
+| **Task 3** | Automatic key rotation | Compliance, backward compatibility | Meet PCI-DSS, HIPAA, SOC2 key rotation requirements |
+| **Task 4** | Multi-region disaster recovery | Cross-region encryption, replicas | Ensure business continuity with zero-downtime failover |
 
 By the end, you'll understand how to:
 - Create and manage customer-managed KMS keys (CMKs)
@@ -59,6 +60,51 @@ By the end, you'll understand how to:
 - Enable automatic key rotation for compliance requirements
 - Deploy multi-region keys for global applications and disaster recovery
 - Apply least-privilege access controls to your encryption keys
+
+---
+
+## Security Overview
+
+This lab addresses critical security controls required by modern compliance frameworks:
+
+| Framework | Requirement | How This Lab Addresses It |
+|-----------|-------------|---------------------------|
+| **PCI-DSS** | 3.4 - Render PAN unreadable | AES-256 encryption for cardholder data |
+| **PCI-DSS** | 3.6.4 - Cryptographic key changes | Automatic annual key rotation |
+| **HIPAA** | 164.312(a)(2)(iv) - Encryption | KMS encryption for PHI at rest |
+| **SOC2** | CC6.1 - Logical access controls | Key policies with least privilege |
+| **NIST 800-53** | SC-12 - Cryptographic key management | Centralized key lifecycle management |
+| **GDPR** | Art. 32 - Security of processing | Encryption as technical safeguard |
+
+### Defense in Depth Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    SECURITY LAYERS IN THIS LAB                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  Layer 1: IDENTITY & ACCESS                                             │
+│  ├── IAM policies control WHO can use keys                              │
+│  ├── Key policies control WHAT operations are allowed                   │
+│  └── Grants provide temporary, scoped access                            │
+│                                                                          │
+│  Layer 2: ENCRYPTION                                                     │
+│  ├── AES-256-GCM for symmetric (FIPS 197 compliant)                     │
+│  ├── RSA-2048/4096 for asymmetric (FIPS 186-4 compliant)                │
+│  └── Keys protected in FIPS 140-2 Level 3 HSMs                          │
+│                                                                          │
+│  Layer 3: KEY LIFECYCLE                                                  │
+│  ├── Automatic rotation limits exposure window                          │
+│  ├── 7-30 day deletion waiting period prevents accidents                │
+│  └── Multi-region replication ensures availability                      │
+│                                                                          │
+│  Layer 4: AUDIT & MONITORING                                             │
+│  ├── CloudTrail logs every API call                                     │
+│  ├── CloudWatch alarms for suspicious activity                          │
+│  └── AWS Config rules for compliance validation                         │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -339,9 +385,11 @@ aws sts get-caller-identity
 
 ---
 
-## Hands-On Labs
+## Hands-On Tasks
 
-### Lab 1: Symmetric Key Encryption (10 mins)
+### Task 1: Implement Symmetric Encryption with AES-256 (10 mins)
+
+**Security Context:** Symmetric encryption using AES-256-GCM is the gold standard for protecting data at rest. AWS KMS keys never leave the FIPS 140-2 Level 3 validated HSMs, ensuring cryptographic operations are performed in tamper-resistant hardware. This protects against unauthorized access even if an attacker gains access to your AWS environment.
 
 Symmetric encryption uses a single key for both encryption and decryption. This is the most common and cost-effective encryption method for data at rest.
 
@@ -441,7 +489,9 @@ SUCCESS: Decrypted data matches original!
 
 ---
 
-### Lab 2: Asymmetric Key Encryption (10 mins)
+### Task 2: Configure Asymmetric Encryption with RSA-2048 (10 mins)
+
+**Security Context:** Asymmetric encryption solves the key distribution problem inherent in symmetric encryption. The public key can be freely shared with clients, partners, or embedded in applications without compromising security. The private key remains exclusively within AWS KMS HSMs, making it impossible for attackers to extract—even with root access to your AWS account. This enables secure data collection from untrusted environments.
 
 Asymmetric encryption uses a public-private key pair. The public key encrypts data, and only the private key (stored securely in KMS) can decrypt it.
 
@@ -543,7 +593,9 @@ fi
 
 ---
 
-### Lab 3: Key Rotation (10 mins)
+### Task 3: Enable Automatic Key Rotation for Compliance (10 mins)
+
+**Security Context:** Regular key rotation limits the blast radius of a potential key compromise. If an attacker somehow obtains key material, rotation ensures that exposure is time-limited. AWS KMS automatic rotation meets compliance requirements for PCI-DSS (Requirement 3.6.4), HIPAA, SOC2, and FedRAMP. The rotation is cryptographically seamless—old ciphertext remains decryptable while new encryptions use fresh key material.
 
 Key rotation is essential for security compliance. AWS KMS supports automatic annual rotation of symmetric keys while maintaining backward compatibility.
 
@@ -679,7 +731,9 @@ fi
 
 ---
 
-### Lab 4: Multi-Region Keys (15 mins)
+### Task 4: Deploy Multi-Region Keys for Disaster Recovery (15 mins)
+
+**Security Context:** Multi-region keys address both security and availability concerns. During a regional outage or disaster, your applications can seamlessly decrypt data using replica keys in unaffected regions—without exposing plaintext during cross-region transfer. The key material is cryptographically identical across regions but independently protected by each region's HSM infrastructure, providing defense-in-depth against regional compromises.
 
 Multi-region keys allow you to encrypt data in one AWS region and decrypt it in another, without cross-region API calls. This is essential for disaster recovery and global applications.
 
@@ -1203,10 +1257,10 @@ AWS KMS Masterclass.../
 ├── images/
 │   └── aws-kms-architecture.png        # Architecture diagrams
 ├── scripts/
-│   ├── symmetric-encryption-demo.sh    # Lab 1 automation
-│   ├── asymmetric-encryption-demo.sh   # Lab 2 automation
-│   ├── key-rotation-demo.sh            # Lab 3 automation
-│   ├── multi-region-keys-demo.sh       # Lab 4 automation
+│   ├── symmetric-encryption-demo.sh    # Task 1: Symmetric encryption
+│   ├── asymmetric-encryption-demo.sh   # Task 2: Asymmetric encryption
+│   ├── key-rotation-demo.sh            # Task 3: Key rotation
+│   ├── multi-region-keys-demo.sh       # Task 4: Multi-region keys
 │   └── cleanup.sh                      # Resource cleanup
 ├── configs/
 │   └── kms-key-policy.json             # Sample key policy
