@@ -1,0 +1,52 @@
+# Encrypted/Decrypted files
+encrypted-*.txt
+encrypted-*.bin
+decrypted-*.txt
+decrypted-*.bin
+
+# Keys and certificates
+*.pem
+*.der
+*.key
+public-key.*
+private-key.*
+temp-key.bin
+data-key.json
+
+# Test files
+small-plaintext.txt
+rotation-test.txt
+mrk-test.txt
+mrk-reverse.txt
+reverse-test.txt
+large-file.*
+
+# Lab config
+lab-config.txt
+*.credentials
+
+# Environment files
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Terraform state (if using IaC)
+*.tfstate
+*.tfstate.*
+.terraform/

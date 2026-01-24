@@ -1,0 +1,111 @@
+{
+  "Version": "2012-10-17",
+  "Id": "kms-lab-key-policy",
+  "Statement": [
+    {
+      "Sid": "Enable IAM User Permissions",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::<ACCOUNT_ID>:root"
+      },
+      "Action": "kms:*",
+      "Resource": "*"
+    },
+    {
+      "Sid": "Allow Key Administrators",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::<ACCOUNT_ID>:role/KMSAdminRole"
+      },
+      "Action": [
+        "kms:Create*",
+        "kms:Describe*",
+        "kms:Enable*",
+        "kms:List*",
+        "kms:Put*",
+        "kms:Update*",
+        "kms:Revoke*",
+        "kms:Disable*",
+        "kms:Get*",
+        "kms:Delete*",
+        "kms:TagResource",
+        "kms:UntagResource",
+        "kms:ScheduleKeyDeletion",
+        "kms:CancelKeyDeletion"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "Allow Encryption Operations",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::<ACCOUNT_ID>:role/ApplicationRole"
+      },
+      "Action": [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey",
+        "kms:GenerateDataKeyWithoutPlaintext",
+        "kms:DescribeKey"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "Allow Secrets Manager Integration",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "secretsmanager.amazonaws.com"
+      },
+      "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey",
+        "kms:DescribeKey",
+        "kms:CreateGrant"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "kms:CallerAccount": "<ACCOUNT_ID>",
+          "kms:ViaService": "secretsmanager.<REGION>.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "Allow S3 Integration",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "s3.amazonaws.com"
+      },
+      "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "kms:CallerAccount": "<ACCOUNT_ID>"
+        }
+      }
+    },
+    {
+      "Sid": "Allow RDS Integration",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "rds.amazonaws.com"
+      },
+      "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey*",
+        "kms:CreateGrant",
+        "kms:DescribeKey"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "kms:CallerAccount": "<ACCOUNT_ID>"
+        }
+      }
+    }
+  ]
+}

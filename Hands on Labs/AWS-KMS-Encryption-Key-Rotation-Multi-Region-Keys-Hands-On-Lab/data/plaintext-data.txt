@@ -1,0 +1,17 @@
+This is sensitive data that needs to be encrypted using AWS KMS.
+It could represent customer PII, financial records, health information,
+or any data requiring protection at rest.
+
+AWS Key Management Service (KMS) provides centralized control over
+cryptographic keys used to protect your data. KMS integrates with
+AWS services and your own applications to provide consistent
+encryption and key management across your entire infrastructure.
+
+Sample sensitive data fields:
+- Customer ID: CUST-12345-ABCDE
+- Account Number: ****-****-****-1234
+- SSN: ***-**-6789
+- API Key: sk_live_*******************
+
+This data should never be stored in plaintext in production systems.
+Always use KMS encryption for data at rest and TLS for data in transit.
