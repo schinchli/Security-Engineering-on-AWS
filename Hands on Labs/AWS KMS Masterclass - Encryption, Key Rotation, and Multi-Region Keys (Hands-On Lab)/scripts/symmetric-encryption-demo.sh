@@ -64,9 +64,9 @@ echo ""
 aws kms encrypt \
   --key-id $KEY_ALIAS \
   --plaintext fileb://data/plaintext-data.txt \
-  --output text \
+  --region $REGION \
   --query CiphertextBlob \
-  --region $REGION > encrypted-data-symmetric.txt
+  --output text | base64 --decode > encrypted-data-symmetric.txt
 
 ORIGINAL_SIZE=$(wc -c < data/plaintext-data.txt | tr -d ' ')
 ENCRYPTED_SIZE=$(wc -c < encrypted-data-symmetric.txt | tr -d ' ')
@@ -83,9 +83,9 @@ echo "Step 3: Decrypting data..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 aws kms decrypt \
   --ciphertext-blob fileb://encrypted-data-symmetric.txt \
-  --output text \
+  --region $REGION \
   --query Plaintext \
-  --region $REGION | base64 --decode > decrypted-data-symmetric.txt
+  --output text | base64 --decode > decrypted-data-symmetric.txt
 
 echo "✅ Data decrypted successfully!"
 echo "   Output file: decrypted-data-symmetric.txt"

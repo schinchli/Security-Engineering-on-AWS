@@ -110,9 +110,9 @@ aws kms decrypt \
   --key-id $KEY_ALIAS \
   --ciphertext-blob fileb://encrypted-data-asymmetric.bin \
   --encryption-algorithm RSAES_OAEP_SHA_256 \
-  --output text \
+  --region $REGION \
   --query Plaintext \
-  --region $REGION | base64 --decode > decrypted-data-asymmetric.txt
+  --output text | base64 --decode > decrypted-data-asymmetric.txt
 
 echo "Data decrypted successfully!"
 echo "   Output: decrypted-data-asymmetric.txt"

@@ -94,9 +94,9 @@ echo "Multi-region encrypted data for DR - $(date)" > mrk-test.txt
 aws kms encrypt \
   --key-id $KEY_ALIAS \
   --plaintext fileb://mrk-test.txt \
-  --output text \
+  --region $PRIMARY_REGION \
   --query CiphertextBlob \
-  --region $PRIMARY_REGION > encrypted-mrk-primary.txt
+  --output text | base64 --decode > encrypted-mrk-primary.txt
 
 echo "Data encrypted in $PRIMARY_REGION"
 echo "Content: $(cat mrk-test.txt)"
@@ -110,9 +110,9 @@ echo ""
 
 aws kms decrypt \
   --ciphertext-blob fileb://encrypted-mrk-primary.txt \
-  --output text \
+  --region $REPLICA_REGION \
   --query Plaintext \
-  --region $REPLICA_REGION | base64 --decode > decrypted-mrk-replica.txt
+  --output text | base64 --decode > decrypted-mrk-replica.txt
 
 echo "Data decrypted in $REPLICA_REGION"
 echo ""
@@ -140,18 +140,18 @@ echo "Encrypting in $REPLICA_REGION..."
 aws kms encrypt \
   --key-id $KEY_ALIAS \
   --plaintext fileb://mrk-reverse.txt \
-  --output text \
+  --region $REPLICA_REGION \
   --query CiphertextBlob \
-  --region $REPLICA_REGION > encrypted-mrk-replica.txt
+  --output text | base64 --decode > encrypted-mrk-replica.txt
 echo "Data encrypted in $REPLICA_REGION"
 
 # Decrypt in primary region
 echo "Decrypting in $PRIMARY_REGION..."
 aws kms decrypt \
   --ciphertext-blob fileb://encrypted-mrk-replica.txt \
-  --output text \
+  --region $PRIMARY_REGION \
   --query Plaintext \
-  --region $PRIMARY_REGION | base64 --decode > decrypted-mrk-primary.txt
+  --output text | base64 --decode > decrypted-mrk-primary.txt
 echo "Data decrypted in $PRIMARY_REGION"
 
 if diff mrk-reverse.txt decrypted-mrk-primary.txt > /dev/null; then
