@@ -436,9 +436,9 @@ It could be customer PII, financial records, or health information." > plaintext
 aws kms encrypt \
   --key-id $KEY_ALIAS \
   --plaintext fileb://plaintext-data.txt \
-  --output text \
+  --region $REGION \
   --query CiphertextBlob \
-  --region $REGION > encrypted-data.txt
+  --output text | base64 --decode > encrypted-data.txt
 
 echo "Data encrypted successfully!"
 echo "Original size: $(wc -c < plaintext-data.txt) bytes"
@@ -451,9 +451,9 @@ echo "Encrypted size: $(wc -c < encrypted-data.txt) bytes"
 # Decrypt the data
 aws kms decrypt \
   --ciphertext-blob fileb://encrypted-data.txt \
-  --output text \
+  --region $REGION \
   --query Plaintext \
-  --region $REGION | base64 --decode > decrypted-data.txt
+  --output text | base64 --decode > decrypted-data.txt
 
 echo "Data decrypted successfully!"
 ```
@@ -569,9 +569,9 @@ aws kms decrypt \
   --key-id $KEY_ALIAS \
   --ciphertext-blob fileb://encrypted-asymmetric.bin \
   --encryption-algorithm RSAES_OAEP_SHA_256 \
-  --output text \
+  --region $REGION \
   --query Plaintext \
-  --region $REGION | base64 --decode > decrypted-asymmetric.txt
+  --output text | base64 --decode > decrypted-asymmetric.txt
 
 echo "Data decrypted with KMS private key"
 cat decrypted-asymmetric.txt
@@ -661,9 +661,9 @@ echo "Data encrypted before rotation" > rotation-test.txt
 aws kms encrypt \
   --key-id $KEY_ALIAS \
   --plaintext fileb://rotation-test.txt \
-  --output text \
+  --region $REGION \
   --query CiphertextBlob \
-  --region $REGION > encrypted-before-rotation.txt
+  --output text | base64 --decode > encrypted-before-rotation.txt
 
 echo "Data encrypted with current key material"
 ```
@@ -714,9 +714,9 @@ echo "Data encrypted with current key material"
 # Even after rotation is enabled, old ciphertext still decrypts
 aws kms decrypt \
   --ciphertext-blob fileb://encrypted-before-rotation.txt \
-  --output text \
+  --region $REGION \
   --query Plaintext \
-  --region $REGION | base64 --decode > decrypted-after-rotation.txt
+  --output text | base64 --decode > decrypted-after-rotation.txt
 
 if diff rotation-test.txt decrypted-after-rotation.txt > /dev/null; then
     echo "SUCCESS: Old ciphertext still decrypts after rotation enabled!"
@@ -799,9 +799,9 @@ echo "Multi-region encrypted data for disaster recovery" > mrk-test.txt
 aws kms encrypt \
   --key-id $KEY_ALIAS \
   --plaintext fileb://mrk-test.txt \
-  --output text \
+  --region $PRIMARY_REGION \
   --query CiphertextBlob \
-  --region $PRIMARY_REGION > encrypted-in-primary.txt
+  --output text | base64 --decode > encrypted-in-primary.txt
 
 echo "Data encrypted in $PRIMARY_REGION"
 ```
@@ -812,9 +812,9 @@ echo "Data encrypted in $PRIMARY_REGION"
 # Decrypt in replica region (us-west-2) - NO cross-region API call needed!
 aws kms decrypt \
   --ciphertext-blob fileb://encrypted-in-primary.txt \
-  --output text \
+  --region $REPLICA_REGION \
   --query Plaintext \
-  --region $REPLICA_REGION | base64 --decode > decrypted-in-replica.txt
+  --output text | base64 --decode > decrypted-in-replica.txt
 
 echo "Data decrypted in $REPLICA_REGION"
 
@@ -833,16 +833,16 @@ echo "Reverse direction test" > reverse-test.txt
 aws kms encrypt \
   --key-id $KEY_ALIAS \
   --plaintext fileb://reverse-test.txt \
-  --output text \
+  --region $REPLICA_REGION \
   --query CiphertextBlob \
-  --region $REPLICA_REGION > encrypted-in-replica.txt
+  --output text | base64 --decode > encrypted-in-replica.txt
 
 # Decrypt in primary region
 aws kms decrypt \
   --ciphertext-blob fileb://encrypted-in-replica.txt \
-  --output text \
+  --region $PRIMARY_REGION \
   --query Plaintext \
-  --region $PRIMARY_REGION | base64 --decode > decrypted-in-primary.txt
+  --output text | base64 --decode > decrypted-in-primary.txt
 
 if diff reverse-test.txt decrypted-in-primary.txt > /dev/null; then
     echo "SUCCESS: Bidirectional cross-region encryption works!"

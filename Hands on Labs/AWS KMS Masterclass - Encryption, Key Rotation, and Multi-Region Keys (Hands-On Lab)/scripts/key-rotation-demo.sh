@@ -88,9 +88,9 @@ echo "Data encrypted before rotation - $(date)" > rotation-test.txt
 aws kms encrypt \
   --key-id $KEY_ALIAS \
   --plaintext fileb://rotation-test.txt \
-  --output text \
+  --region $REGION \
   --query CiphertextBlob \
-  --region $REGION > encrypted-before-rotation.txt
+  --output text | base64 --decode > encrypted-before-rotation.txt
 echo "Data encrypted: encrypted-before-rotation.txt"
 echo "Content: $(cat rotation-test.txt)"
 echo ""
@@ -135,9 +135,9 @@ echo ""
 
 aws kms decrypt \
   --ciphertext-blob fileb://encrypted-before-rotation.txt \
-  --output text \
+  --region $REGION \
   --query Plaintext \
-  --region $REGION | base64 --decode > decrypted-after-rotation.txt
+  --output text | base64 --decode > decrypted-after-rotation.txt
 
 if diff rotation-test.txt decrypted-after-rotation.txt > /dev/null; then
     echo "SUCCESS: Data decrypts correctly!"
