@@ -29,7 +29,8 @@ Each lab implements **real-world AWS security patterns** aligned with the [AWS W
 
 | # | Lab | Services | Duration | Level |
 |---|-----|----------|----------|-------|
-| 1 | [Zero-Downtime Credential Rotation](Hands%20on%20Labs/Securing%20RDS%20Database%20Credentials%20with%20AWS%20KMS%20and%20Secrets%20Manager%20(Hands-On%2C%20Zero-Downtime%20Rotation)/README.md) | KMS, Secrets Manager, RDS, Lambda | 30 min | Intermediate |
+| 1 | [AWS KMS Masterclass - Encryption, Key Rotation & Multi-Region Keys](Hands%20on%20Labs/AWS%20KMS%20Masterclass%20-%20Encryption%2C%20Key%20Rotation%2C%20and%20Multi-Region%20Keys%20(Hands-On%20Lab)/README.md) | KMS, S3, IAM | 45 min | Intermediate |
+| 2 | [Zero-Downtime Credential Rotation](Hands%20on%20Labs/Securing%20RDS%20Database%20Credentials%20with%20AWS%20KMS%20and%20Secrets%20Manager%20(Hands-On%2C%20Zero-Downtime%20Rotation)/README.md) | KMS, Secrets Manager, RDS, Lambda | 30 min | Intermediate |
 
 *More labs coming soon: VPC Security, WAF, GuardDuty, Security Hub, IAM Access Analyzer*
 
