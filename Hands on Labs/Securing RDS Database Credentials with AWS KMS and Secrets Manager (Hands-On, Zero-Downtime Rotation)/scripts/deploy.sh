@@ -17,6 +17,9 @@ KMS_KEY_ID=$(aws kms create-key \
   --query 'KeyMetadata.KeyId' \
   --output text)
 
+# Delete old alias if exists
+aws kms delete-alias --alias-name $KMS_KEY_ALIAS --region $REGION 2>/dev/null || true
+
 aws kms create-alias \
   --alias-name $KMS_KEY_ALIAS \
   --target-key-id $KMS_KEY_ID \
