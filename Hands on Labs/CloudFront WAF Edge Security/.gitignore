@@ -1,0 +1,27 @@
+# Temporary files
+/tmp/
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+
+# AWS credentials (never commit)
+.aws/
+credentials
+*.pem
+*.key
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Logs
+*.log
