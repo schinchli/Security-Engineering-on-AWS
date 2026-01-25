@@ -440,7 +440,7 @@ aws kms encrypt \
   --query CiphertextBlob \
   --output text | base64 --decode > encrypted-data.txt
 
-echo "Data encrypted successfully!"
+echo 'Data encrypted successfully!'
 echo "Original size: $(wc -c < plaintext-data.txt) bytes"
 echo "Encrypted size: $(wc -c < encrypted-data.txt) bytes"
 ```
@@ -455,7 +455,7 @@ aws kms decrypt \
   --query Plaintext \
   --output text | base64 --decode > decrypted-data.txt
 
-echo "Data decrypted successfully!"
+echo 'Data decrypted successfully!'
 ```
 
 #### Step 1.4: Verify Integrity
@@ -463,9 +463,9 @@ echo "Data decrypted successfully!"
 ```bash
 # Verify decrypted data matches original
 if diff plaintext-data.txt decrypted-data.txt > /dev/null; then
-    echo "SUCCESS: Decrypted data matches original!"
+    echo 'SUCCESS: Decrypted data matches original!'
 else
-    echo "ERROR: Data mismatch!"
+    echo 'ERROR: Data mismatch!'
 fi
 ```
 
@@ -581,7 +581,7 @@ cat decrypted-asymmetric.txt
 
 ```bash
 if diff small-plaintext.txt decrypted-asymmetric.txt > /dev/null; then
-    echo "SUCCESS: Asymmetric encryption/decryption verified!"
+    echo 'SUCCESS: Asymmetric encryption/decryption verified!'
 fi
 ```
 
@@ -719,7 +719,7 @@ aws kms decrypt \
   --output text | base64 --decode > decrypted-after-rotation.txt
 
 if diff rotation-test.txt decrypted-after-rotation.txt > /dev/null; then
-    echo "SUCCESS: Old ciphertext still decrypts after rotation enabled!"
+    echo 'SUCCESS: Old ciphertext still decrypts after rotation enabled!'
 fi
 ```
 
@@ -820,7 +820,7 @@ echo "Data decrypted in $REPLICA_REGION"
 
 # Verify
 if diff mrk-test.txt decrypted-in-replica.txt > /dev/null; then
-    echo "SUCCESS: Cross-region encryption/decryption works!"
+    echo 'SUCCESS: Cross-region encryption/decryption works!'
 fi
 ```
 
@@ -845,7 +845,7 @@ aws kms decrypt \
   --output text | base64 --decode > decrypted-in-primary.txt
 
 if diff reverse-test.txt decrypted-in-primary.txt > /dev/null; then
-    echo "SUCCESS: Bidirectional cross-region encryption works!"
+    echo 'SUCCESS: Bidirectional cross-region encryption works!'
 fi
 ```
 
