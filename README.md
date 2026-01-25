@@ -84,6 +84,12 @@ All labs follow strict security practices:
 
 ---
 
+## 📖 Recommended Reading
+
+- [How to Use AWS Security Agent for Automated Vulnerability Detection and Remediation?](https://aws.plainenglish.io/how-to-use-aws-security-agent-for-automated-vulnerability-detection-and-remediation-cfdaef9af5b8)
+
+---
+
 ## 📄 License
 
 MIT License — free for learning and commercial use.
