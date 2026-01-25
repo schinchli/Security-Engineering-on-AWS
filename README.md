@@ -110,6 +110,4 @@ If this repo helped you and you'd like deeper guidance or hands-on support, feel
 
 ---
 
-**Build real AWS security skills. Think like a Cloud Security Architect. Engineer like production.** 🚀
-
-⭐ **Star this repository** to follow upcoming AWS security labs.
+**Build real AWS security skills. Think like a Cloud Security Architect. Engineer like production.** Star this repository to follow upcoming AWS security labs.
