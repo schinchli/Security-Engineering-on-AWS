@@ -99,10 +99,11 @@ MIT License — free for learning and commercial use.
 
 ## 👤 Author
 
-**Shashank Chinchli** — AWS Solutions Architect & Golden Jacket Holder
+**Shashank Chinchli** — AWS Solutions Architect & Golden Jacket Holder | [View my Credly badges](https://www.credly.com/users/shashank-chinchli/badges)
 
 [![GitHub](https://img.shields.io/badge/GitHub-schinchli-black?logo=github)](https://github.com/schinchli)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-shashankk-blue?logo=linkedin)](https://www.linkedin.com/in/shashankk/)
+[![Credly](https://img.shields.io/badge/Credly-Badges-orange?logo=credly)](https://www.credly.com/users/shashank-chinchli/badges)
 
 ---
 
